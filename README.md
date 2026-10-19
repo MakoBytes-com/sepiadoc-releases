@@ -13,4 +13,4 @@ SepiaDoc is licensed under the [SepiaDoc License Agreement](LICENSE): free for p
 a paid Business License for business use. This repository holds installers only; SepiaDoc's
 source code is private.
 
-Questions, problems, or a Business License: support@sepiadoc.com
+Website: https://sepiadoc.com · Questions, problems, or a Business License: support@sepiadoc.com
