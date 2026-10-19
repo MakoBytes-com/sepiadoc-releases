@@ -64,8 +64,10 @@ jobs:
           mapfile -t tags <<< "$listed"
           newest="$(printf '%s\n' "${tags[@]}" "$TAG" | grep -E '^v[0-9]+\.[0-9]+\.[0-9]+$' | sed 's/^v//' | sort -V | tail -n 1)"
           if [ "$newest" = "${TAG#v}" ]; then mark="--latest"; else mark="--latest=false"; fi
-          # Republishing keeps the existing tag (release tags can't be moved or deleted: a repository rule).
-          if gh release view "$TAG" -R "$GITHUB_REPOSITORY" > /dev/null 2>&1; then
+          # Republishing keeps the existing tag (release tags can't be moved or deleted: a repository rule). An
+          # immutable release is final: deleting it would lose the page for good, since its tag can't be used again.
+          if existing="$(gh release view "$TAG" -R "$GITHUB_REPOSITORY" --json isImmutable -q '.isImmutable' 2>/dev/null)"; then
+            [ "$existing" != "true" ] || { echo "$TAG is already published and locked (immutable). Release a new version number."; exit 1; }
             gh release delete "$TAG" -R "$GITHUB_REPOSITORY" --yes
           fi
           gh release create "$TAG" "$NAME" -R "$GITHUB_REPOSITORY" --title "SepiaDoc ${TAG#v}" --notes-file notes.md "$mark"
