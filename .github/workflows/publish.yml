@@ -6,7 +6,8 @@ name: publish
 # Every input is checked before use and none is ever pasted into a shell command (they arrive as environment
 # variables). The installer must come from SepiaDoc's own download server, match its SHA-256 and carry Mako Logics
 # LLC's Azure Trusted Signing identity. A release is only marked "Latest" if it really is the newest version, so
-# republishing an old one can't freeze updates.
+# republishing an old one can't freeze updates. The token that can write releases is only given to the last step,
+# after the downloaded installer has been checked.
 on:
   workflow_dispatch:
     inputs:
@@ -17,12 +18,14 @@ on:
 permissions:
   contents: write
 concurrency: publish
+defaults:
+  run:
+    shell: bash --noprofile --norc -euo pipefail {0}
 jobs:
   publish:
     runs-on: ubuntu-latest
     timeout-minutes: 15
     env:
-      GH_TOKEN: ${{ github.token }}
       TAG: ${{ inputs.tag }}
       URL: ${{ inputs.url }}
       SHA: ${{ inputs.sha256 }}
@@ -40,7 +43,8 @@ jobs:
       - name: Fetch and check the installer
         run: |
           name="SepiaDoc-Setup-${TAG#v}.exe"
-          curl -fsS --proto '=https' --max-filesize 524288000 -o "$name" "$URL"   # no redirects followed
+          # No redirects followed; gives up after 10 minutes rather than hanging on a stalled download.
+          curl -fsS --proto '=https' --max-filesize 524288000 --connect-timeout 30 --max-time 600 -o "$name" "$URL"
           echo "$SHA  $name" | sha256sum -c -
           sudo apt-get update -qq > /dev/null && sudo apt-get install -y -qq osslsigncode > /dev/null
           # A sanity check that this is Mako's signed installer (the certificates attached to it), not a full
@@ -52,11 +56,16 @@ jobs:
           grep -Fq "$IDENTITY" certificates.txt || { echo "The installer isn't signed with Mako Logics LLC's Trusted Signing identity"; exit 1; }
           echo "NAME=$name" >> "$GITHUB_ENV"
       - name: Publish the release
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: |
           # Fails closed: if the existing releases can't be listed, the job stops rather than guessing "Latest".
-          tags="$(gh release list -R "$GITHUB_REPOSITORY" --limit 200 --json tagName -q '.[].tagName')"
-          newest="$(printf '%s\n' $tags "$TAG" | sed 's/^v//' | sort -V | tail -n 1)"
+          listed="$(gh release list -R "$GITHUB_REPOSITORY" --limit 200 --json tagName -q '.[].tagName')"
+          mapfile -t tags <<< "$listed"
+          newest="$(printf '%s\n' "${tags[@]}" "$TAG" | grep -E '^v[0-9]+\.[0-9]+\.[0-9]+$' | sed 's/^v//' | sort -V | tail -n 1)"
           if [ "$newest" = "${TAG#v}" ]; then mark="--latest"; else mark="--latest=false"; fi
           # Republishing keeps the existing tag (release tags can't be moved or deleted: a repository rule).
-          gh release delete "$TAG" -R "$GITHUB_REPOSITORY" --yes || true
+          if gh release view "$TAG" -R "$GITHUB_REPOSITORY" > /dev/null 2>&1; then
+            gh release delete "$TAG" -R "$GITHUB_REPOSITORY" --yes
+          fi
           gh release create "$TAG" "$NAME" -R "$GITHUB_REPOSITORY" --title "SepiaDoc ${TAG#v}" --notes-file notes.md "$mark"
