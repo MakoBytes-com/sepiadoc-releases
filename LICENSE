@@ -1,0 +1,131 @@
+SEPIADOC LICENSE AGREEMENT
+Version 1.0, October 2026
+
+SepiaDoc is made by Mako Logics LLC, a Texas limited liability company
+("Mako Logics", "we"). This agreement is between you and Mako Logics, and it
+applies when you install or use SepiaDoc, including its command-line tool
+(sepiadoc-cli) and its updates. If you don't agree to it, don't install or use
+SepiaDoc.
+
+In short: SepiaDoc is free for personal use at home. Businesses pay for a
+low-cost Business License. Your documents stay on your computer.
+
+
+1. PERSONAL USE IS FREE
+
+You may install and use SepiaDoc free of charge, on any number of computers
+you own or control, for personal, non-commercial purposes. Examples: your own
+household paperwork, personal taxes, forms for your family, school work, and
+applying for a job.
+
+
+2. BUSINESS USE NEEDS A BUSINESS LICENSE
+
+Any other use is "business use" and needs a paid SepiaDoc Business License from
+Mako Logics, one for each person who uses SepiaDoc. Business use includes using
+SepiaDoc:
+  (a) at or for a company, partnership, sole proprietorship, or other business;
+  (b) for work you are paid for, including freelance and contract work;
+  (c) at or for a government body, school, nonprofit, or other organization.
+
+Evaluation. A business may try SepiaDoc free of charge for 30 days before
+buying. After 30 days, continued business use needs a Business License.
+
+Business Licenses are bought from Mako Logics on the terms and at the price
+shown when you buy. Contact support@sepiadoc.com.
+
+
+3. WHAT YOU MAY NOT DO
+
+You may not:
+  (a) sell, rent, lease, or charge for SepiaDoc, or include it in a product or
+      service you sell;
+  (b) modify SepiaDoc, or reverse engineer, decompile, or disassemble it,
+      except where applicable law allows it despite this restriction;
+  (c) remove or change any copyright, trademark, or license notice;
+  (d) distribute a modified copy of SepiaDoc or its installer.
+
+You may give other people an unmodified copy of the official SepiaDoc
+installer, free of charge. Their use is covered by this agreement.
+
+
+4. YOUR DOCUMENTS AND YOUR PRIVACY
+
+Your documents belong to you. SepiaDoc works on your computer. It does not
+upload your documents, has no account, and collects no usage data. It
+connects to the internet only when you press Check for updates.
+Details you save in SepiaDoc (such as your name, address, and signatures) are
+stored on your computer, encrypted to your Windows account.
+
+
+5. OWNERSHIP
+
+SepiaDoc is licensed to you, not sold. Mako Logics and its licensors own
+SepiaDoc and all rights in it, except the rights this agreement gives you.
+"SepiaDoc" and the SepiaDoc logo are trademarks of Mako Logics LLC.
+
+
+6. THIRD-PARTY COMPONENTS
+
+SepiaDoc includes components made by others, such as the PDFium PDF engine,
+the .NET runtime, Avalonia, and several fonts. They are listed in the NOTICE
+file and the "licenses" folder that come with SepiaDoc. Each is provided under
+its own license, and nothing in this agreement limits your rights under those
+licenses for those components.
+
+
+7. UPDATES
+
+Mako Logics may release updates but doesn't have to. Updates are covered by
+this agreement unless they come with a different one. SepiaDoc installs an
+update only when you choose to.
+
+
+8. NO WARRANTY
+
+SepiaDoc is provided "as is" and "as available", without warranty of any kind,
+express or implied, including warranties of merchantability, fitness for a
+particular purpose, and non-infringement. Mako Logics does not warrant that
+SepiaDoc will be error-free or uninterrupted. Always keep a copy of important
+documents before you change them.
+
+
+9. LIMITATION OF LIABILITY
+
+To the fullest extent the law allows, Mako Logics will not be liable for any
+indirect, incidental, special, consequential, or punitive damages, or for any
+loss of data, profits, revenue, or business, arising out of or relating to
+SepiaDoc or this agreement, even if advised of the possibility of such damages.
+Mako Logics' total liability for all claims is limited to the greater of the
+amount you paid for SepiaDoc in the 12 months before the claim, or US $50.
+
+Some places don't allow these exclusions or limits, so some of them may not
+apply to you.
+
+
+10. ENDING THIS AGREEMENT
+
+This agreement lasts until it ends. It ends automatically if you break it.
+When it ends, you must stop using SepiaDoc and delete your copies. Sections 4
+to 6 and 8 to 12 continue after it ends.
+
+
+11. EXPORT
+
+You must follow all United States export laws and regulations that apply to
+SepiaDoc.
+
+
+12. GENERAL
+
+This agreement is governed by the laws of the State of Texas, United States,
+without regard to its conflict-of-laws rules. Any dispute will be heard in the
+state or federal courts located in Montgomery County, Texas, and you and Mako
+Logics agree to their jurisdiction. If any part of this agreement can't be
+enforced, the rest still applies. This agreement, together with any Business
+License you buy, is the whole agreement between you and Mako Logics about
+SepiaDoc.
+
+Questions: support@sepiadoc.com
+
+Copyright 2026 Mako Logics LLC. All rights reserved.
