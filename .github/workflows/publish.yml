@@ -20,6 +20,7 @@ concurrency: publish
 jobs:
   publish:
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     env:
       GH_TOKEN: ${{ github.token }}
       TAG: ${{ inputs.tag }}
@@ -39,9 +40,12 @@ jobs:
       - name: Fetch and check the installer
         run: |
           name="SepiaDoc-Setup-${TAG#v}.exe"
-          curl -fsSL --proto '=https' --max-filesize 524288000 -o "$name" "$URL"
+          curl -fsS --proto '=https' --max-filesize 524288000 -o "$name" "$URL"   # no redirects followed
           echo "$SHA  $name" | sha256sum -c -
-          sudo apt-get install -y -qq osslsigncode > /dev/null
+          sudo apt-get update -qq > /dev/null && sudo apt-get install -y -qq osslsigncode > /dev/null
+          # A sanity check that this is Mako's signed installer (the certificates attached to it), not a full
+          # cryptographic verification: the URL above can only be written by Mako, and every copy of SepiaDoc
+          # verifies the signature itself (WinVerifyTrust, identity, root, version) before running anything.
           osslsigncode extract-signature -in "$name" -out signature.der > /dev/null
           openssl pkcs7 -inform DER -in signature.der -print_certs -text -noout > certificates.txt
           grep -Eq 'Subject:.*O ?= ?Mako Logics LLC' certificates.txt || { echo "The installer isn't signed by Mako Logics LLC"; exit 1; }
@@ -49,8 +53,9 @@ jobs:
           echo "NAME=$name" >> "$GITHUB_ENV"
       - name: Publish the release
         run: |
-          latest="$(gh release view -R "$GITHUB_REPOSITORY" --json tagName -q .tagName 2>/dev/null || echo v0.0.0)"
-          newest="$(printf '%s\n%s\n' "${latest#v}" "${TAG#v}" | sort -V | tail -n 1)"
+          # Fails closed: if the existing releases can't be listed, the job stops rather than guessing "Latest".
+          tags="$(gh release list -R "$GITHUB_REPOSITORY" --limit 200 --json tagName -q '.[].tagName')"
+          newest="$(printf '%s\n' $tags "$TAG" | sed 's/^v//' | sort -V | tail -n 1)"
           if [ "$newest" = "${TAG#v}" ]; then mark="--latest"; else mark="--latest=false"; fi
           # Republishing keeps the existing tag (release tags can't be moved or deleted: a repository rule).
           gh release delete "$TAG" -R "$GITHUB_REPOSITORY" --yes || true
